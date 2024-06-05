@@ -16,8 +16,10 @@ cd project-name
 ```
 
 ```bash
-# Configuring the things
+# Installing dependencies
 sudo apt update
+python -m venv myenv # creating python environment
+source myenv/bin/activate # activatimng the python environment.
 pip install Flask
 
 ```
