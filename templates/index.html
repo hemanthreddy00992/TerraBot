@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create AWS Resource</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .logs {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow-y: auto;
+            height: 400px; /* Limit height for scroll */
+        }
+        .form-container {
+            flex: 1;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Create AWS Resource</h1>
+            <form method="post">
+                <label for="resource_type">Resource Type:</label>
+                <select id="resource_type" name="resource_type" onchange="toggleResourceForm()" required>
+                    <option value="">Select</option>
+                    <option value="s3">S3 Bucket</option>
+                    <option value="ec2">EC2 Instance</option>
+                </select>
+
+                <div id="s3_form" style="display: none;">
+                    <label for="bucket_name">S3 Bucket Name:</label>
+                    <input type="text" id="bucket_name" name="bucket_name">
+                </div>
+
+                <div id="ec2_form" style="display: none;">
+                    <label for="instance_type">Instance Type:</label>
+                    <select id="instance_type" name="instance_type">
+                        <option value="t2.micro">t2.micro</option>
+                        <option value="t2.medium">t2.medium</option>
+                    </select>
+
+                    <label for="storage">Storage (GB):</label>
+                    <input type="number" id="storage" name="storage">
+
+                    <label for="ami">AMI ID:</label>
+                    <input type="text" id="ami" name="ami" value="ami-12345678"> <!-- Example AMI ID -->
+
+                    <label for="instance_name">Instance Name:</label>
+                    <input type="text" id="instance_name" name="instance_name">
+                </div>
+
+                <input type="submit" value="Create">
+            </form>
+        </div>
+        <div class="logs" id="logs">
+            <!-- Logs will be displayed here -->
+        </div>
+    </div>
+    <script>
+        function toggleResourceForm() {
+            var resourceType = document.getElementById('resource_type').value;
+            var s3Form = document.getElementById('s3_form');
+            var ec2Form = document.getElementById('ec2_form');
+            if (resourceType == 's3') {
+                s3Form.style.display = 'block';
+                ec2Form.style.display = 'none';
+            } else if (resourceType == 'ec2') {
+                s3Form.style.display = 'none';
+                ec2Form.style.display = 'block';
+            }
+        }
+
+        function loadLogs() {
+            fetch('/logs')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('logs').innerHTML = data;
+                });
+        }
+
+        setInterval(loadLogs, 2000); // Refresh logs every 2 seconds
+        loadLogs(); // Load logs on page load
+    </script>
+</body>
+</html>
+
